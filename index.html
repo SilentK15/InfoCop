@@ -271,6 +271,59 @@
   .foot-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; font-size:0.82rem; }
   .foot-links{ display:flex; gap:22px; }
   .foot-links a:hover{ color:var(--teal); }
+
+  /* ---------- CHECKOUT MODAL (demo only) ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(8,17,31,0.72); backdrop-filter:blur(4px);
+    display:none; align-items:center; justify-content:center; z-index:200; padding:20px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal{
+    background:#fff; border-radius:14px; width:100%; max-width:420px; overflow:hidden;
+    box-shadow:0 40px 80px -20px rgba(0,0,0,0.5); animation: modalin .25s ease;
+  }
+  @keyframes modalin{ from{ opacity:0; transform:translateY(10px) scale(0.98);} to{opacity:1; transform:translateY(0) scale(1);} }
+  .modal-head{
+    background:var(--ink); color:var(--paper); padding:22px 24px; position:relative;
+  }
+  .modal-close{
+    position:absolute; top:16px; right:16px; background:none; border:none; color:rgba(246,247,245,0.6);
+    font-size:1.3rem; line-height:1; cursor:pointer; padding:4px;
+  }
+  .modal-close:hover{ color:var(--paper); }
+  .modal-head .demo-flag{
+    font-family:var(--mono); font-size:0.66rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--teal); background:rgba(18,184,172,0.12); border:1px solid rgba(18,184,172,0.3);
+    display:inline-block; padding:3px 8px; border-radius:5px; margin-bottom:12px;
+  }
+  .modal-head h3{ font-family:var(--display); font-size:1.3rem; }
+  .modal-head .modal-price{ font-family:var(--mono); font-size:0.86rem; color:rgba(246,247,245,0.6); margin-top:4px; }
+  .modal-body{ padding:24px; }
+  .modal-body .field{ margin-bottom:16px; }
+  .modal-body .field label{
+    display:block; font-family:var(--mono); font-size:0.7rem; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--slate); margin-bottom:7px;
+  }
+  .modal-body .field input{
+    width:100%; border:1px solid var(--line); border-radius:7px; padding:11px 13px; font-family:var(--body);
+    font-size:0.92rem; color:var(--ink);
+  }
+  .modal-row{ display:flex; gap:12px; }
+  .modal-row .field{ flex:1; }
+  .modal-pay-btn{
+    width:100%; margin-top:6px; padding:13px; border-radius:8px; border:none; background:var(--teal);
+    color:var(--ink); font-weight:600; font-size:0.94rem; cursor:pointer; transition:opacity .2s ease;
+  }
+  .modal-pay-btn:hover{ opacity:0.88; }
+  .modal-note{ font-size:0.76rem; color:var(--slate); text-align:center; margin-top:14px; }
+  .modal-success{ display:none; padding:44px 24px; text-align:center; }
+  .modal-success.show{ display:block; }
+  .modal-success .check{
+    width:56px; height:56px; border-radius:50%; background:rgba(18,184,172,0.12); color:var(--teal-deep);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:1.6rem;
+  }
+  .modal-success h3{ font-family:var(--display); font-size:1.2rem; margin-bottom:8px; }
+  .modal-success p{ color:var(--slate); font-size:0.9rem; margin-bottom:22px; }
 </style>
 </head>
 <body>
@@ -437,38 +490,38 @@
           <span class="plan-tag">Free</span>
           <div class="price">₹0</div>
           <div class="plan-audience">For new users testing the waters</div>
-          <button class="plan-cta">Get started</button>
+          <button class="plan-cta" onclick="openCheckout('Free','₹0','one-time')">Get started</button>
         </div>
         <div class="plan">
           <span class="plan-tag">Basic</span>
           <div class="price">₹499<small>/mo</small></div>
           <div class="plan-audience">Students &amp; individuals</div>
-          <button class="plan-cta">Choose Basic</button>
+          <button class="plan-cta" onclick="openCheckout('Basic','₹499','/mo')">Choose Basic</button>
         </div>
         <div class="plan popular">
           <span class="badge">Most popular</span>
           <span class="plan-tag">Premium</span>
           <div class="price">₹999<small>/mo</small></div>
           <div class="plan-audience">Professionals who want full monitoring</div>
-          <button class="plan-cta">Choose Premium</button>
+          <button class="plan-cta" onclick="openCheckout('Premium','₹999','/mo')">Choose Premium</button>
         </div>
         <div class="plan">
           <span class="plan-tag">Family</span>
           <div class="price">₹1,999<small>/mo</small></div>
           <div class="plan-audience">Up to 5 members</div>
-          <button class="plan-cta">Choose Family</button>
+          <button class="plan-cta" onclick="openCheckout('Family','₹1,999','/mo')">Choose Family</button>
         </div>
         <div class="plan">
           <span class="plan-tag">Business</span>
           <div class="price">₹4,999<small>/mo</small></div>
           <div class="plan-audience">Small businesses</div>
-          <button class="plan-cta">Choose Business</button>
+          <button class="plan-cta" onclick="openCheckout('Business','₹4,999','/mo')">Choose Business</button>
         </div>
         <div class="plan">
           <span class="plan-tag">Enterprise</span>
           <div class="price">Custom</div>
           <div class="plan-audience">Large organizations</div>
-          <button class="plan-cta">Talk to us</button>
+          <button class="plan-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Talk to us</button>
         </div>
       </div>
       <p class="price-note">// all plans include a free exposure scan before you pay</p>
@@ -535,6 +588,52 @@
   </div>
 </footer>
 
+<!-- CHECKOUT MODAL (demo only, no real payment) -->
+<div class="modal-overlay" id="checkoutOverlay" onclick="if(event.target===this) closeCheckout()">
+  <div class="modal">
+    <div class="modal-head">
+      <button class="modal-close" onclick="closeCheckout()" aria-label="Close">&times;</button>
+      <span class="demo-flag">Demo checkout · no real charge</span>
+      <h3 id="modalPlanName">Premium plan</h3>
+      <div class="modal-price" id="modalPlanPrice">₹999/mo</div>
+    </div>
+    <div class="modal-body" id="modalForm">
+      <form onsubmit="event.preventDefault(); showSuccess();">
+        <div class="field">
+          <label for="ckName">Full name</label>
+          <input id="ckName" type="text" placeholder="Your name" required>
+        </div>
+        <div class="field">
+          <label for="ckEmail">Email</label>
+          <input id="ckEmail" type="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label for="ckCard">Card number</label>
+          <input id="ckCard" type="text" inputmode="numeric" placeholder="4242 4242 4242 4242" maxlength="19" required>
+        </div>
+        <div class="modal-row">
+          <div class="field">
+            <label for="ckExp">Expiry</label>
+            <input id="ckExp" type="text" placeholder="MM/YY" maxlength="5" required>
+          </div>
+          <div class="field">
+            <label for="ckCvc">CVC</label>
+            <input id="ckCvc" type="text" placeholder="123" maxlength="3" required>
+          </div>
+        </div>
+        <button type="submit" class="modal-pay-btn" id="modalPayBtn">Pay ₹999/mo</button>
+        <p class="modal-note">This is a demo checkout &mdash; no payment is processed and no card details are stored.</p>
+      </form>
+    </div>
+    <div class="modal-success" id="modalSuccess">
+      <div class="check">✓</div>
+      <h3 id="successPlan">You're on the Premium plan</h3>
+      <p>This was a demo confirmation &mdash; connect a real payment provider to go live.</p>
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="closeCheckout()">Done</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // hero redaction reveal on load
   window.addEventListener('DOMContentLoaded', () => {
@@ -551,6 +650,55 @@
     entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ---------- checkout modal (demo only, no real payment processing) ----------
+  const overlay = document.getElementById('checkoutOverlay');
+  const modalForm = document.getElementById('modalForm');
+  const modalSuccess = document.getElementById('modalSuccess');
+
+  function openCheckout(planName, price, suffix){
+    document.getElementById('modalPlanName').textContent = planName + ' plan';
+    document.getElementById('modalPlanPrice').textContent = suffix === 'one-time' ? price : price + suffix;
+    document.getElementById('modalPayBtn').textContent = suffix === 'one-time' ? ('Get started — ' + price) : ('Pay ' + price + suffix);
+    document.getElementById('successPlan').textContent = "You're on the " + planName + " plan";
+    modalForm.style.display = 'block';
+    modalSuccess.classList.remove('show');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('ckName').focus(), 50);
+  }
+
+  function closeCheckout(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      modalForm.querySelector('form').reset();
+      modalForm.style.display = 'block';
+      modalSuccess.classList.remove('show');
+    }, 200);
+  }
+
+  function showSuccess(){
+    modalForm.style.display = 'none';
+    modalSuccess.classList.add('show');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && overlay.classList.contains('open')) closeCheckout();
+  });
+
+  // light auto-formatting for card fields
+  document.getElementById('ckCard').addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g,'').slice(0,16).replace(/(.{4})/g,'$1 ').trim();
+  });
+  document.getElementById('ckExp').addEventListener('input', function(){
+    let v = this.value.replace(/\D/g,'').slice(0,4);
+    if(v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
+    this.value = v;
+  });
+  document.getElementById('ckCvc').addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g,'').slice(0,3);
+  });
 </script>
 
 </body>
